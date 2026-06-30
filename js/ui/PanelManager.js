@@ -28,7 +28,7 @@ export default class PanelManager {
     showResult(result) {
         this.pathEl.textContent = result.path.join(" → ") + " → " + result.path[0]
         this.costEl.textContent = result.cost
-        this.timeEl.textContent = result.executionTime.toFixed(3) + " ms"
+        this.timeEl.textContent = result.executionTime + " ms"
     }
 
     clearResult() {

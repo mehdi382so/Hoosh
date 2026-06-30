@@ -77,6 +77,6 @@ export default class Timer {
      * @returns {string}
      */
     formatted() {
-        return `${this.elapsed().toFixed(3)} ms`
+        return `${this.elapsed()} ms`
     }
 }

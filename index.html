@@ -15,6 +15,7 @@
 
         <div id="main">
             <div id="sidebar">
+                <!-- ===== PANEL 1: MAP INPUT ===== -->
                 <div class="panel">
                     <h3>📝 Map Input</h3>
                     <label>Enter cities and distances: <span class="hint">(Ctrl+Enter)</span></label>
@@ -24,6 +25,7 @@
                     <div id="info-msg" class="info"></div>
                 </div>
 
+                <!-- ===== PANEL 2: START NODE ===== -->
                 <div class="panel">
                     <h3>📍 Start Node</h3>
                     <select id="start-select" disabled>
@@ -31,6 +33,7 @@
                     </select>
                 </div>
 
+                <!-- ===== PANEL 3: ALGORITHM ===== -->
                 <div class="panel">
                     <h3>⚙️ Algorithm</h3>
                     <select id="algo-select">
@@ -43,14 +46,49 @@
                     <div id="animation-status"></div>
                 </div>
 
+                <!-- ===== PANEL 4: RESULTS ===== -->
                 <div class="panel">
                     <h3>📊 Results</h3>
-                    <div class="result-row"><span class="result-label">Path:</span><span id="res-path" class="result-value">-</span></div>
-                    <div class="result-row"><span class="result-label">Cost:</span><span id="res-cost" class="result-value">-</span></div>
-                    <div class="result-row"><span class="result-label">Time:</span><span id="res-time" class="result-value">-</span></div>
+                    <div class="result-row">
+                        <span class="result-label">Path:</span>
+                        <span id="res-path" class="result-value">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Cost:</span>
+                        <span id="res-cost" class="result-value">-</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="result-label">Time:</span>
+                        <span id="res-time" class="result-value">-</span>
+                    </div>
                 </div>
-            </div>
 
+                <!-- ===== PANEL 5: STEP HISTORY (زیر RESULTS) ===== -->
+                <div class="panel" id="steps-panel" style="display:none;">
+                    <h3>📜 Step History</h3>
+                    
+                    <!-- دکمه‌های کنترل -->
+                    <div style="display:flex; gap:4px; margin-bottom:6px; flex-wrap:wrap; align-items:center;">
+                        <button id="step-prev" class="btn-step" disabled>⬅️</button>
+                        <button id="step-play" class="btn-step">▶️</button>
+                        <button id="step-next" class="btn-step" disabled>➡️</button>
+                        <button id="step-reset" class="btn-step">↺</button>
+                        <div style="display:flex; align-items:center; gap:4px; margin-left:auto;">
+                            <span style="color:#666; font-size:0.7em;">Speed:</span>
+                            <input type="range" id="step-speed" min="300" max="2000" step="100" value="1000" style="width:60px; accent-color:#00e676;">
+                        </div>
+                    </div>
+                    
+                    <!-- وضعیت مرحله -->
+                    <div id="step-status" style="text-align:center; color:#666; font-size:0.75em; margin-bottom:4px;">Step 0/0</div><!-- لیست مراحل -->
+                    <div id="step-list" style="max-height:180px; overflow-y:auto; background:rgba(0,0,0,0.3); border-radius:4px; padding:4px; font-family:'Courier New',monospace; font-size:0.75em; line-height:1.5; min-height:30px; border:1px solid #1a1a3a;">
+                        <!-- Steps rendered here -->
+                    </div>
+                </div>
+
+            </div><!-- end sidebar -->
+
+            <!-- ===== GRAPH AREA ===== -->
             <div id="graph-area">
                 <canvas id="tsp-canvas"></canvas>
                 <div id="placeholder">

@@ -1,4 +1,6 @@
 import Distance from "../utils/Distance.js"
+import StepRecorder from "../core/StepRecorder.js";
+
 
 /**
  * Base class for all TSP algorithms.
@@ -7,23 +9,16 @@ import Distance from "../utils/Distance.js"
 export default class BaseAlgorithm {
     /**
      * @param {Graph} graph
-     */
+     */    
     constructor(graph) {
 
         if (!graph)
             throw new Error("Graph is required.")
 
-        /**
-         * Graph instance.
-         * @protected
-         */
         this.graph = graph
-
-        /**
-         * Algorithm name.
-         * @protected
-         */
         this.name = "Base Algorithm"
+        this.useStepRecording = false
+        this.stepRecorder = null
     }
 
     /**
@@ -92,5 +87,37 @@ export default class BaseAlgorithm {
         throw new Error(
             `${this.getName()} must implement solve().`
         )
+    }
+
+    /**
+     * Enable step recording
+     */
+    enableStepRecording() {
+        this.useStepRecording = true;
+        this.stepRecorder = new StepRecorder();
+        return this.stepRecorder;
+    }
+
+    /**
+     * Record a step (only if recording is enabled)
+     */
+    _recordStep(action, data = {}) {
+        if (this.useStepRecording && this.stepRecorder) {
+            this.stepRecorder.record(action, data);
+        }
+    }
+
+    // ... other methods remain the same ...
+
+    /**
+     * Solve TSP with step recording
+     */
+    solveWithSteps(startNode) {
+        this.enableStepRecording();
+        const result = this.solve(startNode);
+        return {
+            ...result,
+            steps: this.stepRecorder.getAllSteps()
+        };
     }
 }

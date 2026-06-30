@@ -14,7 +14,9 @@ export default class SolverService {
         const solver = new AlgoClass(graph)
         const timer  = new Timer()
         timer.start()
-        const result = solver.solve(startNode)
+        
+        // ✅ استفاده از solveWithSteps برای گرفتن steps
+        const result = solver.solveWithSteps(startNode)
         result.executionTime = timer.stop()
         return result
     }

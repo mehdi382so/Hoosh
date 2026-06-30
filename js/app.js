@@ -10,6 +10,7 @@ import ButtonManager    from "./ui/ButtonManager.js"
 import CanvasManager    from "./renderer/CanvasManager.js"
 import GraphRenderer    from "./renderer/GraphRenderer.js"
 import PathAnimator     from "./renderer/PathAnimator.js"
+import StepVisualizer   from "./ui/StepVisualizer.js"
 import SolverService    from "./services/SolverService.js"
 import InputParser      from "./parser/InputParser.js"
 import Validator        from "./parser/Validator.js"
@@ -25,6 +26,9 @@ const pathAnimator = new PathAnimator(canvasMgr, graphRenderer)
 const panelMgr = new PanelManager()
 const buttonMgr = new ButtonManager()
 const dropdownMgr = new DropdownManager()
+
+// Step Visualizer
+const stepVisualizer = new StepVisualizer(graphRenderer, panelMgr)
 
 // DOM refs
 const cityInput = document.getElementById("city-input")
@@ -48,6 +52,8 @@ function loadMap() {
     // 3. Wipe previous graph, path, and result data
     panelMgr.hideAll()
     pathAnimator.stop()
+    stepVisualizer.stop()
+    stepVisualizer.reset()
     state.reset()
 
     try {
@@ -106,6 +112,8 @@ algoSelect.addEventListener("change", () => {
 runBtn.addEventListener("click", () => {
     if (!buttonMgr.canRun(state)) return
     pathAnimator.stop()
+    stepVisualizer.stop()
+    stepVisualizer.reset()
 
     const result = SolverService.solve(
         state.getAlgorithm(),
@@ -116,18 +124,32 @@ runBtn.addEventListener("click", () => {
     state.setResult(result.path, result.cost, result.executionTime)
     state.setPositions(graphRenderer.getPositions())
     state.setAnimating(true)
-    buttonMgr.update({ runBtn, resetBtn, startSelect, state })
+    buttonMgr.update({ runBtn, resetBtn, startSelect,state })
 
     panelMgr.showResult(result)
-    pathAnimator.animate(state.getGraph(), state.getPositions(), result.path, () => {
+    
+    // Check if result has steps for step-by-step visualization
+    if (result.steps && result.steps.length > 0) {
+        // Load steps into visualizer (this will show the panel)
+        stepVisualizer.loadSteps(result.steps, state.getStartNode())
+        // Show first step
+        stepVisualizer.nextStep()
         state.setAnimating(false)
         buttonMgr.update({ runBtn, resetBtn, startSelect, state })
-    })
+    } else {
+        // Fallback to regular animation
+        pathAnimator.animate(state.getGraph(), state.getPositions(), result.path, () => {
+            state.setAnimating(false)
+            buttonMgr.update({ runBtn, resetBtn, startSelect, state })
+        })
+    }
 })
 
 // Reset
 resetBtn.addEventListener("click", () => {
     pathAnimator.stop()
+    stepVisualizer.stop()
+    stepVisualizer.reset()
     state.clearResult()
     panelMgr.clearResult()
 
