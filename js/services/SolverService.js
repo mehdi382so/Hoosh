@@ -2,9 +2,7 @@ import Algorithms from "../constants/Algorithms.js"
 import Greedy from "../algorithms/Greedy.js"
 import Timer from "../utils/Timer.js"
 
-const registry = {
-    [Algorithms.GREEDY.id]: Greedy,
-}
+const registry = { [Algorithms.GREEDY.id]: Greedy }
 
 export default class SolverService {
     static solve(algorithmId, graph, startNode) {
@@ -15,13 +13,12 @@ export default class SolverService {
         const timer  = new Timer()
         timer.start()
         
-        // ✅ استفاده از solveWithSteps برای گرفتن steps
+        // Use solveWithSteps to get steps
         const result = solver.solveWithSteps(startNode)
+        
         result.executionTime = timer.stop()
         return result
     }
 
-    static register(id, algoClass) {
-        registry[id] = algoClass
-    }
+    static register(id, algoClass) { registry[id] = algoClass }
 }

@@ -1,16 +1,4 @@
-/**
- * Graph Edge
- *
- * Represents an undirected weighted edge.
- */
 export default class Edge {
-    /**
-     * Create an edge.
-     *
-     * @param {string} from
-     * @param {string} to
-     * @param {number} cost
-     */
     constructor(from, to, cost) {
         if (typeof from !== "string" || typeof to !== "string")
             throw new TypeError("Node names must be strings.")
@@ -38,11 +26,6 @@ export default class Edge {
         )
     }
 
-    /**
-     * Convert edge to JSON object.
-     *
-     * @returns {Object}
-     */
     toJSON() {
         return {
             from: this.from,
@@ -51,11 +34,6 @@ export default class Edge {
         }
     }
 
-    /**
-     * Clone this edge.
-     *
-     * @returns {Edge}
-     */
     clone() {
         return new Edge(
             this.from,

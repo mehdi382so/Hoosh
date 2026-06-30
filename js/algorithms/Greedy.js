@@ -1,13 +1,6 @@
-// js/algorithms/Greedy.js
-
 import BaseAlgorithm from "./BaseAlgorithm.js"
 
-/**
- * Greedy TSP Solver
- * Strategy: Nearest Neighbor
- */
 export default class Greedy extends BaseAlgorithm {
-
     constructor(graph) {
         super(graph)
         this.name = "Greedy"
@@ -15,25 +8,16 @@ export default class Greedy extends BaseAlgorithm {
     }
 
     solve(startNode) {
+        if (!startNode) throw new Error("Starting node is required.")
+        if (!this.graph.hasNode(startNode)) throw new Error(`Node "${startNode}" does not exist in the graph.`)
 
-        // 1. Validation
-        if (!startNode) {
-            throw new Error("Starting node is required.")
-        }
-
-        if (!this.graph.hasNode(startNode)) {
-            throw new Error(`Node "${startNode}" does not exist in the graph.`)
-        }
-
-        // 2. Init
         const totalNodes = this.graph.nodeCount()
         const visited = new Set()
         const path = []
         let current = startNode
         this.stepCounter = 0
-
-        // Step 1: Start Node
         this.stepCounter++
+
         this._recordStep('start', {
             message: `Start Node: ${startNode}`,
             path: [startNode],
@@ -45,19 +29,16 @@ export default class Greedy extends BaseAlgorithm {
         visited.add(current)
         path.push(current)
 
-        // 3. Main loop - Nearest Neighbor
         while (visited.size < totalNodes) {
 
             const neighbors = this.graph.getNeighbors(current)
             let bestNode = null
             let bestDistance = Infinity
 
-            // Get available unvisited neighbors
             const availableNeighbors = neighbors
                 .filter(edge => !visited.has(edge.to))
                 .map(edge => ({ node: edge.to, cost: edge.cost }))
 
-            // Step: Considering neighbors
             this.stepCounter++
             this._recordStep('considering', {
                 message: `Node ${current}: Considering ${availableNeighbors.length} Neighbors`,
@@ -89,7 +70,6 @@ export default class Greedy extends BaseAlgorithm {
                 )
             }
 
-            // Step: Selected Node
             this.stepCounter++
             this._recordStep('choose', {
                 message: `Selected Node: ${bestNode} (${bestDistance})`,
@@ -101,12 +81,10 @@ export default class Greedy extends BaseAlgorithm {
                 stepNumber: this.stepCounter
             })
 
-            // Move to next node
             visited.add(bestNode)
             path.push(bestNode)
             current = bestNode
 
-            // Step: Moved to new node
             this.stepCounter++
             this._recordStep('move', {
                 message: `Node ${current}: ${visited.size}/${totalNodes} visited`,
@@ -118,10 +96,8 @@ export default class Greedy extends BaseAlgorithm {
             })
         }
 
-        // 4. Calculate cost
         const cost = this.calculateCost(path)
 
-        // Final step: Tour Complete
         this.stepCounter++
         this._recordStep('complete', {
             message: `✅ Tour Complete! Cost: ${cost}`,

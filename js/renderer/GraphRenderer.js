@@ -55,26 +55,23 @@ export default class GraphRenderer {
         this.positions = this.computePositions(graph)
         this._drawBase(graph, startNode)
         if (path && path.length > 1) {
-            // اگر تور کامل شده، از _drawFullTourEdges استفاده کن
-            if (isComplete) {
-                this._drawFullTourEdges(path)
-            } else {
-                this._drawStepEdges(path)
-            }
+            
+            if (isComplete) { this._drawFullTourEdges(path) } 
+            else { this._drawStepEdges(path) }
+
             this._highlightPathNodes(path, startNode)
         }
         return this.positions
     }
 
     /**
-     * رسم یال‌های مرحله‌ای (بدون بستن مسیر به اول)
-     * فقط یال‌های بین گره‌های متوالی در مسیر رو رسم میکنه
+     * Draw edges by level (without connect back to the first edge)
+     * Just draw the edges of the nodes in sequence
      */
     _drawStepEdges(path) {
         const ctx = this.cm.getCtx()
         const pos = this.positions
 
-        // فقط تا path.length - 1 برو (آخرین گره به اول وصل نشه)
         for (let i = 0; i < path.length - 1; i++) {
             const from = path[i]
             const to = path[i + 1]
@@ -104,14 +101,14 @@ export default class GraphRenderer {
     }
 
     /**
-     * رسم یال‌های کامل تور (برای نمایش نتیجه نهایی)
-     * این متد برای زمانی که تور کامل شده استفاده میشه
+     * Draw complete tour edges (for final display
+     * Just used when tour completed
      */
     _drawFullTourEdges(path) {
         const ctx = this.cm.getCtx()
         const pos = this.positions
 
-        // حلقه کامل (آخرین به اول هم وصل میشه)
+        // Complete tour (last node connected to the first node)
         for (let i = 0; i < path.length; i++) {
             const from = path[i]
             const to = path[(i + 1) % path.length]
@@ -138,11 +135,7 @@ export default class GraphRenderer {
         }
     }
 
-    // متد قبلی _drawPathEdges رو برای سازگاری با کدهای قدیمی نگه میداریم
-    _drawPathEdges(path) {
-        // برای مرحله‌بندی از _drawStepEdges استفاده کن
-        this._drawStepEdges(path)
-    }
+    _drawPathEdges(path) { this._drawStepEdges(path) }
 
     _drawBase(graph, startNode) {
         const ctx = this.cm.getCtx()
@@ -154,7 +147,7 @@ export default class GraphRenderer {
         ctx.shadowColor = "rgba(0,0,0,0.4)"
         ctx.shadowBlur = 15
 
-        // ── Edges ────────────────────────────
+        // Edges
         for (const node of nodes) {
             for (const edge of graph.getNeighbors(node.name)) {
                 const key = [edge.from, edge.to].sort().join("|")
@@ -189,7 +182,7 @@ export default class GraphRenderer {
             }
         }
 
-        // ── Nodes ────────────────────────────
+        // Nodes
         for (const node of nodes) {
             const p = pos[node.name]
             const isStart = node.name === startNode
@@ -295,64 +288,64 @@ export default class GraphRenderer {
     }
 
     highlightNodes(visitedNodes, startNode) {
-        if (!this.graph) return;
+        if (!this.graph) return
         
         if (!visitedNodes || visitedNodes.length === 0) {
-            this._drawBase(this.graph, startNode);
-            return;
+            this._drawBase(this.graph, startNode)
+            return
         }
         
-        this._drawBase(this.graph, startNode);
+        this._drawBase(this.graph, startNode)
         
-        const ctx = this.cm.getCtx();
-        const pos = this.positions;
+        const ctx = this.cm.getCtx()
+        const pos = this.positions
         
         for (const name of visitedNodes) {
-            const p = pos[name];
-            if (!p) continue;
+            const p = pos[name]
+            if (!p) continue
             
-            const isStart = name === startNode;
+            const isStart = name === startNode
             
-            ctx.shadowColor = "rgba(0,230,118,0.3)";
-            ctx.shadowBlur = 12;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, this.nodeRadius + 4, 0, 2 * Math.PI);
-            ctx.fillStyle = "rgba(0,230,118,0.08)";
-            ctx.fill();
+            ctx.shadowColor = "rgba(0,230,118,0.3)"
+            ctx.shadowBlur = 12
+            ctx.beginPath()
+            ctx.arc(p.x, p.y, this.nodeRadius + 4, 0, 2 * Math.PI)
+            ctx.fillStyle = "rgba(0,230,118,0.08)"
+            ctx.fill()
             
-            ctx.shadowBlur = 8;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, this.nodeRadius, 0, 2 * Math.PI);
-            ctx.fillStyle = isStart ? "#0f3460" : this.colors.nodeFillHighlight;
-            ctx.fill();
+            ctx.shadowBlur = 8
+            ctx.beginPath()
+            ctx.arc(p.x, p.y, this.nodeRadius, 0, 2 * Math.PI)
+            ctx.fillStyle = isStart ? "#0f3460" : this.colors.nodeFillHighlight
+            ctx.fill()
             
-            ctx.shadowBlur = 0;
-            ctx.strokeStyle = isStart ? this.colors.nodeStrokeStart : this.colors.nodeStrokeHighlight;
-            ctx.lineWidth = isStart ? 4 : 3;
-            ctx.stroke();
+            ctx.shadowBlur = 0
+            ctx.strokeStyle = isStart ? this.colors.nodeStrokeStart : this.colors.nodeStrokeHighlight
+            ctx.lineWidth = isStart ? 4 : 3
+            ctx.stroke()
             
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, this.nodeRadius - 3, 0, 2 * Math.PI);
-            ctx.strokeStyle = "rgba(255,255,255,0.05)";
-            ctx.lineWidth = 1;
-            ctx.stroke();
+            ctx.beginPath()
+            ctx.arc(p.x, p.y, this.nodeRadius - 3, 0, 2 * Math.PI)
+            ctx.strokeStyle = "rgba(255,255,255,0.05)"
+            ctx.lineWidth = 1
+            ctx.stroke()
             
             if (isStart) {
-                const badgeY = p.y - this.nodeRadius - 16;
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = this.colors.startBadge;
-                ctx.font = "bold 10px 'Segoe UI', sans-serif";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "bottom";
-                ctx.fillText("START", p.x, badgeY);
+                const badgeY = p.y - this.nodeRadius - 16
+                ctx.shadowBlur = 0
+                ctx.fillStyle = this.colors.startBadge
+                ctx.font = "bold 10px 'Segoe UI', sans-serif"
+                ctx.textAlign = "center"
+                ctx.textBaseline = "bottom"
+                ctx.fillText("START", p.x, badgeY)
             }
             
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = this.colors.textPrimary;
-            ctx.font = "bold 14px 'Segoe UI', sans-serif";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(name, p.x, p.y);
+            ctx.shadowBlur = 0
+            ctx.fillStyle = this.colors.textPrimary
+            ctx.font = "bold 14px 'Segoe UI', sans-serif"
+            ctx.textAlign = "center"
+            ctx.textBaseline = "middle"
+            ctx.fillText(name, p.x, p.y)
         }
     }
 }

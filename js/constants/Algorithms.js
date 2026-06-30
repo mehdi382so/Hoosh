@@ -6,6 +6,6 @@ const Algorithms = Object.freeze({
     SIMULATED_ANNEALING: { id: "SimulatedAnnealing", title: "Simulated Annealing" },
     GENETIC:             { id: "Genetic",            title: "Genetic Algorithm" },
     ASTAR:               { id: "AStar",              title: "A* Search" },
-});
+})
 
-export default Algorithms;
+export default Algorithms
