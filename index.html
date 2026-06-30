@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSP Visualizer - AI Project</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="module" src="js/app.js" defer></script>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>🌍 Traveling Salesman Problem</h1>
+        </header>
+
+        <div id="main">
+            <div id="sidebar">
+                <div class="panel">
+                    <h3>📝 Map Input</h3>
+                    <label>Enter cities and distances: <span class="hint">(Ctrl+Enter)</span></label>
+                    <textarea id="city-input" rows="6" placeholder="A B 10&#10;A C 15&#10;A D 20&#10;B C 25&#10;B D 30&#10;C D 35"></textarea>
+                    <button id="load-btn" class="btn-primary">🗺️ Load Map</button>
+                    <div id="error-msg" class="error"></div>
+                    <div id="info-msg" class="info"></div>
+                </div>
+
+                <div class="panel">
+                    <h3>📍 Start Node</h3>
+                    <select id="start-select" disabled>
+                        <option value="">-- Select start node --</option>
+                    </select>
+                </div>
+
+                <div class="panel">
+                    <h3>⚙️ Algorithm</h3>
+                    <select id="algo-select">
+                        <option value="">-- Select algorithm --</option>
+                    </select>
+                    <div class="btn-row">
+                        <button id="run-btn" class="btn-success" disabled>▶️ Run</button>
+                        <button id="reset-btn" class="btn-reset" disabled>🔄 Reset Path</button>
+                    </div>
+                    <div id="animation-status"></div>
+                </div>
+
+                <div class="panel">
+                    <h3>📊 Results</h3>
+                    <div class="result-row"><span class="result-label">Path:</span><span id="res-path" class="result-value">-</span></div>
+                    <div class="result-row"><span class="result-label">Cost:</span><span id="res-cost" class="result-value">-</span></div>
+                    <div class="result-row"><span class="result-label">Time:</span><span id="res-time" class="result-value">-</span></div>
+                </div>
+            </div>
+
+            <div id="graph-area">
+                <canvas id="tsp-canvas"></canvas>
+                <div id="placeholder">
+                    <p style="font-size:3em;">🗺️</p>
+                    <p>Enter data and click <strong>Load Map</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
