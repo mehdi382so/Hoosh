@@ -1,11 +1,13 @@
 import Algorithms from "../constants/Algorithms.js"
-import Greedy from "../algorithms/Greedy.js"
 import Timer from "../utils/Timer.js"
+import Greedy from "../algorithms/Greedy.js"
 import BruteForce from "../algorithms/BruteForce.js"
+import HillClimbing from "../algorithms/HillClimbing.js"
 
 const registry = { 
     [Algorithms.GREEDY.id]: Greedy,
     [Algorithms.BRUTE_FORCE.id]: BruteForce, 
+    [Algorithms.HILL_CLIMBING.id]: HillClimbing
 }
 
 export default class SolverService {
