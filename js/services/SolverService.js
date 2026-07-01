@@ -1,8 +1,12 @@
 import Algorithms from "../constants/Algorithms.js"
 import Greedy from "../algorithms/Greedy.js"
 import Timer from "../utils/Timer.js"
+import BruteForce from "../algorithms/BruteForce.js"
 
-const registry = { [Algorithms.GREEDY.id]: Greedy }
+const registry = { 
+    [Algorithms.GREEDY.id]: Greedy,
+    [Algorithms.BRUTE_FORCE.id]: BruteForce, 
+}
 
 export default class SolverService {
     static solve(algorithmId, graph, startNode) {
@@ -15,7 +19,7 @@ export default class SolverService {
         
         // Use solveWithSteps to get steps
         const result = solver.solveWithSteps(startNode)
-        
+
         result.executionTime = timer.stop()
         return result
     }
