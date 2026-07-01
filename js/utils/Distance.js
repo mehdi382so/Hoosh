@@ -69,10 +69,47 @@ export default class Distance {
     }
 
     /**
+     * Check whether a path is valid (all edges exist).
+     *
+     * @param {Graph} graph
+     * @param {string[]} path
+     * @returns {boolean}
+     */
+    static isValidPath(graph, path) {
+        if (!Array.isArray(path)) return false
+    
+        const nodes = graph.getNodes().map(node => node.name)
+    
+        // شرط 1: تعداد گره‌ها باید برابر باشد
+        if (path.length !== nodes.length) return false
+    
+        // شرط 2: همه گره‌ها دقیقاً یک بار دیده شده‌اند
+        const visited = new Set(path)
+        if (visited.size !== nodes.length) return false
+    
+        for (const node of nodes) {
+            if (!visited.has(node)) return false
+        }
+    
+        // شرط 3: همه یال‌های بین گره‌های متوالی باید وجود داشته باشند
+        for (let i = 0; i < path.length - 1; i++) {
+            const from = path[i]
+            const to = path[i + 1]
+            const distance = graph.getDistance(from, to)
+            
+            if (distance === null) return false  // یال وجود ندارد
+        }
+
+        return true
+    }
+
+    /**
      * Check whether a path is a valid TSP tour.
      * Conditions:
-     * - Visits every node exactly once.
-     * - Contains all graph nodes.
+     * 1. Visits every node exactly once
+     * 2. Contains all graph nodes
+     * 3. Every consecutive pair has an edge in the graph
+     * 4. Last node connects back to first node
      *
      * @param {Graph} graph
      * @param {string[]} path
@@ -80,20 +117,36 @@ export default class Distance {
      */
     static isValidTour(graph, path) {
         if (!Array.isArray(path)) return false
-
-        const nodes = graph
-            .getNodes()
-            .map(node => node.name)
-
+    
+        const nodes = graph.getNodes().map(node => node.name)
+    
+        // شرط 1: تعداد گره‌ها باید برابر باشد
         if (path.length !== nodes.length) return false
-
+    
+        // شرط 2: همه گره‌ها دقیقاً یک بار دیده شده‌اند
         const visited = new Set(path)
         if (visited.size !== nodes.length) return false
-
+    
         for (const node of nodes) {
             if (!visited.has(node)) return false
         }
-
+    
+        // شرط 3: همه یال‌های بین گره‌های متوالی باید وجود داشته باشند
+        for (let i = 0; i < path.length - 1; i++) {
+            const from = path[i]
+            const to = path[i + 1]
+            const distance = graph.getDistance(from, to)
+            
+            if (distance === null) return false  // یال وجود ندارد
+        }
+    
+        // شرط 4: یال برگشت از آخرین به اولین گره باید وجود داشته باشد
+        const lastNode = path[path.length - 1]
+        const firstNode = path[0]
+        const returnEdge = graph.getDistance(lastNode, firstNode)
+        
+        if (returnEdge === null) return false  // یال برگشت وجود ندارد
+    
         return true
     }
 }

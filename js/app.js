@@ -75,7 +75,6 @@ loadBtn.addEventListener("click", loadMap)
 
 // Ctrl + Enter to load map
 cityInput.addEventListener("keydown", (e) => {
-    console.log('Here');
     if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
         e.preventDefault()
         loadMap()
